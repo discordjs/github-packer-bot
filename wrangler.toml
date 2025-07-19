@@ -6,6 +6,7 @@ compatibility_date="2025-07-19"
 port = 5678
 
 [vars]
+APP_ID = "1631654"
 
 [observability.logs]
 enabled = true

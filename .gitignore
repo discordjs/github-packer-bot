@@ -1,6 +1,9 @@
 .vscode
 .idea
 
+.env
+*.private-key.pem
+
 node_modules
 
 .dev.vars

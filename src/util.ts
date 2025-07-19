@@ -1,7 +1,9 @@
 import { pino } from 'pino';
 
 export interface Env {
-	TODO: string;
+	APP_ID: string;
+	PRIVATE_KEY: string;
+	WEBHOOK_SECRET: string;
 }
 
 export const logger = pino({ level: 'debug' });
