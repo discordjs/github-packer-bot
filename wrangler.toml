@@ -1,0 +1,11 @@
+name = "discordjs-packer-bot"
+main = "./src/index.ts"
+compatibility_date="2025-07-19"
+
+[dev]
+port = 5678
+
+[vars]
+
+[observability.logs]
+enabled = true

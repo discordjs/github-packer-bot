@@ -1,0 +1,29 @@
+{
+	"name": "packer-bot",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"packageManager": "pnpm@10.8.1",
+	"scripts": {
+		"lint": "eslint src && prettier --check .",
+		"build": "tsc",
+		"publish": "pnpm build && wrangler deploy",
+		"dev": "wrangler dev",
+		"format": "prettier --write ."
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20250719.0",
+		"eslint": "^8.57.1",
+		"eslint-config-neon": "^0.1.62",
+		"lodash.merge": "^4.6.2",
+		"prettier": "^3.6.2",
+		"prettier-eslint": "^16.4.2",
+		"typescript": "^5.8.3",
+		"typescript-eslint": "^8.36.0",
+		"wrangler": "4.25.0"
+	},
+	"dependencies": {
+		"itty-router": "^5.0.18",
+		"pino": "^9.7.0"
+	}
+}
