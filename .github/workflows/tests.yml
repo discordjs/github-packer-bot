@@ -8,18 +8,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - uses: pnpm/action-setup@v4.1.0
+        name: Install pnpm
+        with:
+          run_install: false
 
       - name: Install deps
         run: pnpm i --frozen-lockfile
 
       - name: Build
-        run: yarn run build
+        run: pnpm run build
 
       - name: Run ESLint & Prettier
-        run: yarn run lint
+        run: pnpm run lint
