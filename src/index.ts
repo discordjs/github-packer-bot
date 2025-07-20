@@ -1,4 +1,4 @@
-import { App } from 'octokit';
+import { getApp } from './app.js';
 import { logger, type Env } from './util.js';
 import { verifyWebhookSignature } from './verify.js';
 
@@ -12,14 +12,6 @@ const server = {
 				headers: { 'content-type': 'application/json' },
 			});
 		}
-
-		const app = new App({
-			appId: env.APP_ID,
-			privateKey: env.PRIVATE_KEY.replaceAll('\\n', '\n'),
-			webhooks: {
-				secret: env.WEBHOOK_SECRET,
-			},
-		});
 
 		const id = request.headers.get('x-github-delivery')!;
 		const name = request.headers.get('x-github-event')!;
@@ -36,6 +28,9 @@ const server = {
 				headers: { 'content-type': 'application/json' },
 			});
 		}
+
+		logger.info('signature verified, processing webhook');
+		const app = getApp(env);
 
 		try {
 			await app.webhooks.receive({
