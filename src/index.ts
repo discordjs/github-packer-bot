@@ -44,7 +44,7 @@ const server = {
 				headers: { 'content-type': 'application/json' },
 			});
 		} catch (error) {
-			logger.error({ error }, 'Error processing webhook');
+			logger.error({ err: error }, 'Error processing webhook');
 			return new Response('internal server error', {
 				status: 500,
 				headers: { 'content-type': 'application/json' },

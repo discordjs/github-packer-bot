@@ -40,8 +40,14 @@ export function getApp(env: Env) {
 		},
 	});
 
-	app.webhooks.on('issue_comment.created', async (data) => {
-		logger.debug('in comment create');
+	// eslint-disable-next-line promise/prefer-await-to-callbacks
+	app.webhooks.onError((err) => {
+		logger.error({ err }, 'Webhook error');
+	});
+
+	// TODO: Swap to create for prod
+	app.webhooks.on('issue_comment.edited', async (data) => {
+		logger.debug('in comment edit');
 
 		if (!data.payload.comment.body.startsWith('pack this')) {
 			logger.debug(`Comment does not start with 'pack this': ${data.payload.comment.body}`);
