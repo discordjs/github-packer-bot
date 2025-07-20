@@ -24,11 +24,39 @@ async function isPRGreen(octokit: Octokit, owner: string, repo: string, pullNumb
 		ref: pullRequest.head.sha,
 	});
 
-	const failedChecks = checkRunsData.check_runs
-		.filter((run) => run.status === 'completed' && run.conclusion !== 'success')
-		.map((run) => run.name);
+	// Group check runs by name and keep only the latest run for each check
+	const latestCheckRuns = checkRunsData.check_runs.reduce<Record<string, (typeof checkRunsData.check_runs)[number]>>(
+		(latest, run) => {
+			// If we haven't seen this check before or this run is newer, update
+			if (!latest[run.name] || new Date(run.completed_at!) > new Date(latest[run.name]!.completed_at!)) {
+				latest[run.name] = run;
+			}
 
-	return statusData.state === 'success' && failedChecks.length === 0;
+			return latest;
+		},
+		{},
+	);
+
+	const failedChecks = Object.values(latestCheckRuns).filter(
+		(run) =>
+			run.status === 'completed' &&
+			run.conclusion !== 'success' &&
+			run.conclusion !== 'neutral' &&
+			// This is often our label CI
+			run.conclusion !== 'skipped',
+	);
+
+	const isGreen = statusData.state === 'success' && failedChecks.length === 0;
+	logger.debug(
+		{
+			isGreen,
+			status: statusData.state,
+			failedChecks,
+		},
+		'PR green check',
+	);
+
+	return isGreen;
 }
 
 export function getApp(env: Env) {
@@ -85,7 +113,6 @@ export function getApp(env: Env) {
 				data.payload.issue.number,
 			))
 		) {
-			logger.debug('Pull request is not green');
 			return;
 		}
 
